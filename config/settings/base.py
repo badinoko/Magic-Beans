@@ -2,21 +2,16 @@ import environ
 import os
 from pathlib import Path
 
-env = environ.Env(
-    DEBUG=(bool, False)
-)
-
-# Корень проекта
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-# Читаем .env файл, если он есть
-environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+env = environ.Env()
+env.read_env(str(BASE_DIR / ".env"))
 
-DEBUG = env("DEBUG")
+SECRET_KEY = env.str("SECRET_KEY", default="your-secret-key")
 
-SECRET_KEY = env("SECRET_KEY")
+DEBUG = env.bool("DEBUG", default=True)
 
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -26,29 +21,23 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    # Ваши приложения
-    "magicbeans.users.apps.UsersConfig",
-    
-    # allauth
-    "django.contrib.sites",
+    "magicbeans.users",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    # другие приложения
 ]
-
-SITE_ID = 1
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-
-    "allauth.account.middleware.AccountMiddleware",
-
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+
+    "allauth.account.middleware.AccountMiddleware",  # <-- Обязательно сюда
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -56,7 +45,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, "templates")],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -72,7 +61,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASES = {
-    "default": env.db("DATABASE_URL")
+    "default": env.db("DATABASE_URL", default="sqlite:///db.sqlite3")
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -91,14 +80,21 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_TZ = True
 
 STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Админка, как в настройках оригинального проекта
+ADMIN_URL = env.str("ADMIN_URL", default="admin/")
+
+# Настройки аутентификации allauth (пример)
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+LOGIN_REDIRECT_URL = "/"
+
