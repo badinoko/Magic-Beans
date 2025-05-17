@@ -6,7 +6,7 @@ DJANGO_DEBUG=True
 DJANGO_ALLOWED_HOSTS='localhost,127.0.0.1,0.0.0.0,*.github.dev' # Важно для Codespaces
 
 # Security
-SECRET_KEY=YOUR_INSECURE_LOCAL_DEV_SECRET_KEY # ОБЯЗАТЕЛЬНО: Введите сюда длинный случайный набор символов для разработки
+SECRET_KEY=hdfjhkjhGHKUH6776FJgjhgkhgGKgkgKGKhGHKG34G3G4K4G5 # ОБЯЗАТЕЛЬНО: Введите сюда длинный случайный набор символов для разработки
                                           # Для продакшена нужен намного более сложный и уникальный ключ!
 
 # Database settings
