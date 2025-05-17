@@ -1,34 +1,28 @@
 version: '3.8'
 
 services:
-  app:
-    build:
-      context: .
-      dockerfile: compose/local/django/Dockerfile
-    command: /start
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: magicbeans
     volumes:
-      - .:/app
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
     ports:
       - "8000:8000"
     env_file:
       - .env.local
     depends_on:
       - db
-    networks:
-      - magic_beans_network
-
-  db:
-    image: postgres:16-alpine
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    env_file:
-      - .env.local
-    networks:
-      - magic_beans_network
 
 volumes:
   postgres_data:
-
-networks:
-  magic_beans_network:
-    driver: bridge
