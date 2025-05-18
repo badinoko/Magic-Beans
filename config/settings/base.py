@@ -1,27 +1,19 @@
-import environ
 import os
-from pathlib import Path
+import environ
 
-# Инициализация чтения переменных окружения из .env
-env = environ.Env(
-    DEBUG=(bool, False),
-    DJANGO_ADMIN_FORCE_ALLAUTH=(bool, False),
-)
+env = environ.Env()
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Читаем .env, если он есть
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
-env_file = BASE_DIR / '.env'
-if env_file.exists():
-    environ.Env.read_env(str(env_file))
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = env("DJANGO_SECRET_KEY", default="fallback-secret-key-for-dev")
 
-# Общие настройки Django
-SECRET_KEY = env('SECRET_KEY', default='your-secret-key-here')
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = env.bool("DJANGO_DEBUG", default=True)
 
-DEBUG = env('DEBUG')
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["*"])
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'])
+# Application definition
 
-# Приложения
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -29,16 +21,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
 
-    # Сторонние приложения
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-
-    # Твои приложения
-    'magicbeans.users.apps.UsersConfig',
-    # ... сюда добавь остальные приложения
+    # Third-party apps
+    'rest_framework',
+    'django_extensions',
+    
+    # Local apps
+    'users.apps.UsersConfig',
+    'products.apps.ProductsConfig',
 ]
+
+AUTH_USER_MODEL = 'users.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -46,7 +40,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'allauth.account.middleware.AccountMiddleware',  # Важно для allauth
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -56,12 +49,12 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',  # для allauth
+                'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -71,12 +64,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# База данных из переменной окружения DATABASE_URL
+# Database
+# https://docs.djangoproject.com/en/4.2/ref/settings/ #databases
+
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='sqlite:///' + str(BASE_DIR / 'db.sqlite3'))
+    'default': env.db("DATABASE_URL", default="sqlite:///db.sqlite3")
 }
 
-# Пароли
+# Password validation
+# https://docs.djangoproject.com/en/4.2/ref/settings/ #auth-password-validators
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -92,37 +89,27 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Локализация
-LANGUAGE_CODE = 'ru-ru'
+# Internationalization
+# https://docs.djangoproject.com/en/4.2/topics/i18n/ 
+
+LANGUAGE_CODE = 'ru'
+
 TIME_ZONE = 'Europe/Moscow'
+
 USE_I18N = True
-USE_L10N = True
+
 USE_TZ = True
 
-# Статика
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/4.2/howto/static-files/ 
+
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-# Медиа
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Пользовательская модель
-AUTH_USER_MODEL = 'users.User'
+# Default primary key field type
+# https://docs.djangoproject.com/en/4.2/ref/settings/ #default-auto-field
 
-# Django Allauth настройки
-AUTHENTICATION_BACKENDS = (
-    "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend",
-)
-
-SITE_ID = 1
-
-LOGIN_REDIRECT_URL = '/'
-ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
-
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-ACCOUNT_EMAIL_REQUIRED = True
-
-# Специальная настройка, чтобы избежать ошибки в admin.py
-DJANGO_ADMIN_FORCE_ALLAUTH = env('DJANGO_ADMIN_FORCE_ALLAUTH', default=False)
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

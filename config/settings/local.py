@@ -1,19 +1,10 @@
-import environ
-import os
-from pathlib import Path
+from .base import *
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
-env = environ.Env()
-env.read_env(str(BASE_DIR / '.env'))
-
-from .base import *  # noqa: F403
-
-# Локальные настройки для разработки
+# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# SECURITY WARNING: update this when you deploy to production!
 ALLOWED_HOSTS = ['*']
 
-# Пример для базы данных (если нужно переопределить)
-DATABASES = {
-    'default': env.db('DATABASE_URL', default='sqlite:///db.sqlite3')
-}
+# Email backend for development
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
