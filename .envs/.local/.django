@@ -1,24 +1,23 @@
-# .envs/.local/.django
+# General
+# ------------------------------------------------------------------------------
+USE_DOCKER=yes
+IPYTHONDIR=/app/.ipython
+# Redis
+# ------------------------------------------------------------------------------
+REDIS_URL=redis://redis:6379/0
 
-# Django settings
-DJANGO_SETTINGS_MODULE=config.settings.local
+# Celery
+# ------------------------------------------------------------------------------
+
+# Flower
+CELERY_FLOWER_USER=debug
+CELERY_FLOWER_PASSWORD=debug
+
+# Django
+# ------------------------------------------------------------------------------
+DJANGO_SECRET_KEY=Fmel2c08RkQLHjqFyinsTuJRBrDF6mz4dStqB5gCXu8OsWrwegzevIJZiA6js7O8
 DJANGO_DEBUG=True
-DJANGO_ALLOWED_HOSTS='localhost,127.0.0.1,0.0.0.0,*.github.dev' # Важно для Codespaces
-
-# Security
-SECRET_KEY=hdfjhkjhGHKUH6776FJgjhgkhgGKgkgKGKhGHKG34G3G4K4G5 # ОБЯЗАТЕЛЬНО: Введите сюда длинный случайный набор символов для разработки
-                                          # Для продакшена нужен намного более сложный и уникальный ключ!
-
-# Database settings
-DATABASE_URL=postgres://magicbeans:magicbeans@postgres:5432/magicbeans
-
-# Caching (для Redis)
-# REDIS_URL=redis://redis:6379/0
-
-# Email (для разработки)
-# EMAIL_HOST=localhost
-# EMAIL_PORT=1025
-# EMAIL_USE_TLS=False
-# EMAIL_HOST_USER=
-# EMAIL_HOST_PASSWORD=
-# DEFAULT_FROM_EMAIL='webmaster@localhost'
+DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+DJANGO_READ_DOT_ENV_FILE=True
+DJANGO_EMAIL_HOST=mailpit
+DJANGO_EMAIL_PORT=1025
