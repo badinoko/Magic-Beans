@@ -1,36 +1,28 @@
 {
-  "name": "Magic Beans Django Project",
+  "name": "Django App",
   "build": {
     "dockerfile": "Dockerfile",
     "context": ".."
-  },
-  "remoteUser": "codespace",
-  "features": {
-    "ghcr.io/devcontainers/features/python:1": {
-      "version": "latest"
-    },
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {
-      "version": "latest"
-    }
   },
   "customizations": {
     "vscode": {
       "extensions": [
         "ms-python.python",
-        "ms-azuretools.vscode-docker",
-        "GitHub.copilot"
+        "batisteo.vscode-django"
       ]
     }
   },
-  "postCreateCommand": "pip install -r requirements.txt", // <--- Важно!
-  "forwardPorts": [8000],
+  "remoteUser": "vscode",
+  "postCreateCommand": "pip install -r requirements.txt",
   "portsAttributes": {
     "8000": {
       "label": "Django App",
       "onAutoForward": "notify"
     }
   },
-  "remoteEnv": {
-    "DJANGO_SETTINGS_MODULE": "config.settings.local" // <--- Очень важно для следующей ошибки!
+  "forwardPorts": [8000],
+  "containerEnv": {
+    "DJANGO_SETTINGS_MODULE": "magic_beans_work.settings",
+    "PYTHONPATH": "/workspaces/magic_beans_work"
   }
 }
