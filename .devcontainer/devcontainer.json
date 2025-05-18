@@ -1,9 +1,9 @@
 {
   "name": "Django App",
-  "build": {
+  "build": {             <-- Удалите // отсюда
     "dockerfile": "Dockerfile",
     "context": ".."
-  },
+  },                     <-- Удалите // отсюда
   "customizations": {
     "vscode": {
       "extensions": [
