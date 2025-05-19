@@ -27,12 +27,15 @@ INSTALLED_APPS = [
     # Third-party apps
     'rest_framework',
     'django_extensions',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 
     # Local apps
     'magicbeans.users.apps.UsersConfig',
 ]
 
-AUTH_USER_MODEL = 'magicbeans.users.CustomUser'  # Changed to magicbeans.users.CustomUser
+AUTH_USER_MODEL = 'users.User'  # Use the correct app_label.ModelName
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
