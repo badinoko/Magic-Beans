@@ -14,10 +14,12 @@ services:
       - db_data:/var/lib/mysql # Сохранение данных базы данных
 
   web:
-    build: . # Указывает Docker Compose использовать ваш Dockerfile в текущей директории
+    build:
+      context: .
+      dockerfile: compose/local/django/Dockerfile
     command: python manage.py runserver 0.0.0.0:8000 # Команда для запуска Django-сервера
-    volumes:
-      - .:/app # Монтируем текущую папку проекта в контейнер
+    # volumes:
+    #   - .:/app # Монтируем текущую папку проекта в контейнер
     ports:
       - "8000:8000" # Пробрасываем порт Django-сервера
     depends_on:

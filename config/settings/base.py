@@ -2,7 +2,8 @@ import os
 import environ
 
 env = environ.Env()
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("DJANGO_SECRET_KEY", default="fallback-secret-key-for-dev")
@@ -26,13 +27,12 @@ INSTALLED_APPS = [
     # Third-party apps
     'rest_framework',
     'django_extensions',
-    
+
     # Local apps
-    'users.apps.UsersConfig',
-    'products.apps.ProductsConfig',
+    'magicbeans.users.apps.UsersConfig',
 ]
 
-AUTH_USER_MODEL = 'users.CustomUser'
+AUTH_USER_MODEL = 'magicbeans.users.CustomUser'  # Changed to magicbeans.users.CustomUser
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

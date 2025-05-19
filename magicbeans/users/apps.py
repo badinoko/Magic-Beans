@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class UsersConfig(AppConfig):
-    name = "magicbeans.users"
+    name = "magicbeans.users"  # Reverted to magicbeans.users
     verbose_name = _("Users")
 
     def ready(self):

@@ -11,7 +11,9 @@ services:
       - "5432:5432"
 
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
